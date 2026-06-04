@@ -361,8 +361,8 @@ The notification pattern keeps the client's view of available tools current with
 ### Build
 
 ```bash
-git clone https://github.com/charliemarciano/skipper-mcp
-cd skipper-mcp
+git clone https://github.com/cmarcia/skipper-map.git
+cd skipper-map
 go build -o skipper-mcp ./...
 ```
 
@@ -435,4 +435,4 @@ Given only the tool name and description, can you identify the correct tool for 
 
 ---
 
-*SkipperMCP source code: [github.com/charliemarciano/skipper-mcp](https://github.com/charliemarciano/skipper-mcp)*
+*SkipperMCP source code: [github.com/cmarcia/skipper-map](https://github.com/cmarcia/skipper-map)*

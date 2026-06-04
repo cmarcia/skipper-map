@@ -51,8 +51,8 @@ SkipperMCP exposes nine tools across two domains:
 ### Build
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/skipper-mcp.git
-cd skipper-mcp
+git clone https://github.com/cmarcia/skipper-map.git
+cd skipper-map
 go build -o skipper-mcp main.go
 ```
 

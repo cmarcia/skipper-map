@@ -27,7 +27,7 @@ SkipperMCP ships with 9 tools covering forecasts, navigation, tides, anchoring, 
 
 If you're building MCP servers — or thinking about context window efficiency more broadly — I think this pattern is worth understanding.
 
-Check it out here: [GitHub Repo Link]
+Check it out here: https://github.com/cmarcia/skipper-map
 
 ---
 
