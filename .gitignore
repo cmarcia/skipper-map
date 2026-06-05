@@ -1,5 +1,9 @@
 # Binary
 skipper-mcp
+client
+
+# Environment — never commit secrets
+.env
 
 # Go
 *.test

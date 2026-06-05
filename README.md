@@ -74,20 +74,55 @@ Restart Claude Desktop. Try asking: *"What sailing tools do you have available?"
 
 ---
 
+## Go LLM Client — Progressive Discovery Demo
+
+`cmd/client/` is a standalone Go MCP **client** that connects to the server via subprocess stdio, wires it to OpenAI's function-calling API, and runs all three Progressive Discovery scenarios end-to-end.
+
+### Setup
+
+```bash
+# 1. Build the MCP server (required at ./skipper-mcp)
+go build -o skipper-mcp .
+
+# 2. Create your .env file
+cp .env.example .env
+# Edit .env and set OPENAI_API_KEY=sk-...
+
+# 3. Run the client
+go run ./cmd/client/
+```
+
+### What the client demonstrates
+
+| Scenario | Discovery layers | Key behaviour |
+|----------|-----------------|---------------|
+| **A — MAYDAY Man Overboard** | Layer 1 + 2 | OpenAI picks `get_emergency_checklist` from its description alone, then constructs `{"situation":"Man Overboard"}` from the jsonschema annotation |
+| **B — Newport → Block Island** | Layer 1 + 2 | Multi-tool chain: `calculate_navigation` → `get_forecast` → `get_alerts`, each selected through description matching |
+| **C — Capability Evolution** | Layer 3 | Starts with 3 core tools (no anchor tool); shows LLM unable to help; simulates `notifications/tools/list_changed`; client refreshes and succeeds with `calculate_anchor_rode` |
+
+The client prints each `[Layer 1]` tool selection and `[Layer 2]` argument construction inline, making the discovery process observable.
+
+---
+
 ## Project Structure
 
 ```
-skipper-mcp/
-├── main.go               # Server entrypoint and tool registration
+skipper/
+├── main.go                  # MCP server entrypoint and tool registration
+├── cmd/
+│   └── client/
+│       └── main.go          # Go MCP client with OpenAI integration (3 scenarios)
 ├── models/
-│   └── models.go         # Shared input types with jsonschema annotations
+│   └── models.go            # Shared input types with jsonschema annotations
 ├── handlers/
-│   ├── weather.go        # NWS weather tool handlers
+│   ├── weather.go           # NWS weather tool handlers
 │   ├── weather_test.go
-│   └── skipper.go        # Navigation and logistics tool handlers
-└── nws/
-    ├── client.go         # HTTP client with connection pooling and retry logic
-    └── client_test.go
+│   └── skipper.go           # Navigation and logistics tool handlers
+├── nws/
+│   ├── client.go            # HTTP client with connection pooling and retry logic
+│   └── client_test.go
+├── .env.example             # API key template (copy to .env)
+└── PROGRESSIVE_DISCOVERY.md # Full architectural guide
 ```
 
 ---

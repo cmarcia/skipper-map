@@ -354,19 +354,40 @@ The notification pattern keeps the client's view of available tools current with
 
 ### Prerequisites
 
-- Go 1.21 or later
-- Claude Desktop (or any MCP-compatible client)
+- Go 1.22 or later
+- An OpenAI API key (for the Go LLM client) **or** Claude Desktop (for the MCP server directly)
 - Access to the NWS API (public, no API key required)
 
-### Build
+### Build the server
 
 ```bash
 git clone https://github.com/cmarcia/skipper-map.git
 cd skipper-map
-go build -o skipper-mcp ./...
+go build -o skipper-mcp .
 ```
 
-### Claude Desktop Configuration
+### Run the Go LLM client (recommended — runs all three scenarios)
+
+The `cmd/client/` package is a complete Go MCP client that connects to the server over subprocess stdio and uses OpenAI to drive the three scenarios described in this document.
+
+```bash
+# Copy the environment template and add your OpenAI key
+cp .env.example .env
+# edit .env → OPENAI_API_KEY=sk-...
+
+# Run — the client builds the server as a subprocess automatically
+go run ./cmd/client/
+```
+
+The client prints each `[Layer 1]` tool selection and `[Layer 2]` argument construction inline, making the discovery process observable in real time.
+
+**What to look for:**
+
+- **Scenario A**: a single tool call to `get_emergency_checklist` with `{"situation":"Man Overboard"}` — zero clarifying questions needed.
+- **Scenario B**: a chain of calls (`calculate_navigation` → `get_forecast` → `get_alerts`) all derived through description matching and schema inspection.
+- **Scenario C**: the LLM fails with 3 tools visible, then succeeds after the full toolset is loaded — demonstrating why Layer 3 notifications matter.
+
+### Connect to Claude Desktop (alternative)
 
 Add the following to your Claude Desktop MCP configuration file. On macOS, this is located at `~/Library/Application Support/Claude/claude_desktop_config.json`:
 
